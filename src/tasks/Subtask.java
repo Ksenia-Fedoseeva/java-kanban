@@ -1,28 +1,28 @@
 package tasks;
 
-import tasks.enums.TaskStatuses;
+import tasks.enums.Status;
 
 public class Subtask extends Task {
-    private Epic epic;
+    private Integer epicId;
 
     // Конструктор для создания новой подзадачи
-    public Subtask(String name, String description, Epic epic) {
+    public Subtask(String name, String description, Integer epicId) {
         super(name, description);
-        this.epic = epic;
-        this.epic.setSubtasks(this);
+        this.epicId = epicId;
     }
 
     // Конструктор для обновления подзадачи
-    public Subtask(Integer id, String name, String description, TaskStatuses status, Epic epic) {
+    public Subtask(Integer id, String name, String description, Status status, Integer epicId) {
         super(id, name, description, status);
-        this.epic = epic;
-        this.epic.setSubtasks(this);
+        this.epicId = epicId;
     }
 
-    @Override
-    public void setStatus(TaskStatuses status) {
-        super.setStatus(status);
-        epic.checkSubtaskStatusAndChangeEpicStatus();
+    public Integer getEpicId() {
+        return epicId;
+    }
+
+    public void setEpicId(Integer epicId) {
+        this.epicId = epicId;
     }
 
     @Override
@@ -32,7 +32,7 @@ public class Subtask extends Task {
                 ", name='" + getName() + '\'' +
                 ", description='" + getDescription() + '\'' +
                 ", status=" + getStatus() +
-                ", epicId=" + (epic != null ? epic.getId() : "No Epic") +
+                ", epicId=" + epicId +
                 '}';
     }
 

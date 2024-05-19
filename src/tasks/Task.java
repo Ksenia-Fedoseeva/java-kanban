@@ -1,27 +1,24 @@
 package tasks;
 
-import tasks.enums.TaskStatuses;
+import tasks.enums.Status;
 
 import java.util.Objects;
 
 public class Task {
-    public static Integer counterId = 1;
-    private final Integer id;
+    private Integer id;
     private String name;
     private String description;
-    private TaskStatuses status;
+    private Status status;
 
     // Конструктор для создания новой задачи
     public Task(String name, String description) {
-        this.id = counterId;
-        counterId++;
         this.name = name;
         this.description = description;
-        this.status = TaskStatuses.NEW;
+        this.status = Status.NEW;
     }
 
     // Конструктор для обновления задачи
-    public Task(Integer id, String name, String description, TaskStatuses status) {
+    public Task(Integer id, String name, String description, Status status) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -40,8 +37,12 @@ public class Task {
         return description;
     }
 
-    public TaskStatuses getStatus() {
+    public Status getStatus() {
         return status;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public void setName(String name) {
@@ -52,7 +53,7 @@ public class Task {
         this.description = description;
     }
 
-    public void setStatus(TaskStatuses status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
