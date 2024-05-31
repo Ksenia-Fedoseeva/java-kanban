@@ -23,6 +23,7 @@ public class Epic extends Task {
 
     @Override
     public void setStatus(Status status) {
+        super.setStatus(status);
     }
 
     public void setStatusNew() {
