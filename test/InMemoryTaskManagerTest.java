@@ -1,8 +1,7 @@
-package test;
-
 import manager.InMemoryTaskManager;
 import manager.TaskManager;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
 import tasks.Subtask;
@@ -13,13 +12,30 @@ import java.util.List;
 
 
 class InMemoryTaskManagerTest {
+    private TaskManager taskManager;
+    private Task task;
+    private Epic epic;
+    private Subtask subtask;
+
+    @BeforeEach
+    void init() {
+        taskManager = new InMemoryTaskManager();
+        task = new Task("Test addNewTask", "Test addNewTask description");
+        taskManager.createTask(task);
+
+        epic = new Epic("Test addNewEpic", "Test addNewEPic description");
+        taskManager.createEpic(epic);
+
+        subtask = new Subtask("Test addNewEpic", "Test addNewEPic description", epic.getId());
+        taskManager.createSubtask(subtask);
+    }
+
+
 
     @Test
     void createTaskTest() {
-        TaskManager taskManager = new InMemoryTaskManager();
         Task task = new Task("Test addNewTask", "Test addNewTask description");
         taskManager.createTask(task);
-
         Task actualTask = taskManager.getTaskById(task.getId());
         Assertions.assertNotNull(actualTask, "Задача не найдена.");
         Assertions.assertEquals(task, actualTask, "Задачи не совпадают.");
@@ -27,10 +43,8 @@ class InMemoryTaskManagerTest {
 
     @Test
     void createEpicTest() {
-        TaskManager taskManager = new InMemoryTaskManager();
         Epic epic = new Epic("Test addNewEpic", "Test addNewEPic description");
         taskManager.createEpic(epic);
-
         Epic actualEpic = taskManager.getEpicById(epic.getId());
         Assertions.assertNotNull(actualEpic, "Эпик не найден.");
         Assertions.assertEquals(epic, actualEpic, "Эпики не совпадают.");
@@ -38,9 +52,6 @@ class InMemoryTaskManagerTest {
 
     @Test
     void createSubtaskTest() {
-        TaskManager taskManager = new InMemoryTaskManager();
-        Epic epic = new Epic("Test addNewEpic", "Test addNewEPic description");
-        taskManager.createEpic(epic);
         Subtask subtask = new Subtask("Test addNewEpic", "Test addNewEPic description", epic.getId());
         taskManager.createSubtask(subtask);
 
@@ -51,9 +62,6 @@ class InMemoryTaskManagerTest {
 
     @Test
     void updateTaskTest() {
-        TaskManager taskManager = new InMemoryTaskManager();
-        Task task = new Task("Test addNewTask", "Test addNewTask description");
-        taskManager.createTask(task);
         Task updatedTask = new Task(task.getId(), "Test addNewTask", "Test addNewTask description Update",
                 Status.IN_PROGRESS);
         taskManager.updateTask(updatedTask);
@@ -66,9 +74,6 @@ class InMemoryTaskManagerTest {
 
     @Test
     void updateEpicTest() {
-        TaskManager taskManager = new InMemoryTaskManager();
-        Epic epic = new Epic("Test addNewEpic", "Test addNewEPic description");
-        taskManager.createEpic(epic);
         Epic updateEpic = new Epic(epic.getId(), "Test addNewEpic", "Test addNewEPic description Update",
                 Status.IN_PROGRESS);
         taskManager.updateEpic(updateEpic);
@@ -81,11 +86,6 @@ class InMemoryTaskManagerTest {
 
     @Test
     void updateSubtaskTest() {
-        TaskManager taskManager = new InMemoryTaskManager();
-        Epic epic = new Epic("Test addNewEpic", "Test addNewEPic description");
-        taskManager.createEpic(epic);
-        Subtask subtask = new Subtask("Test addNewEpic", "Test addNewEPic description", epic.getId());
-        taskManager.createSubtask(subtask);
         Subtask updateSubtask = new Subtask(subtask.getId(), "Test addNewEpic",
                 "Test addNewEPic description Update", Status.IN_PROGRESS, epic.getId());
         taskManager.updateSubtask(updateSubtask);
@@ -158,24 +158,14 @@ class InMemoryTaskManagerTest {
 
     @Test
     void deleteTaskByIdTest() {
-        TaskManager taskManager = new InMemoryTaskManager();
-        Task task = new Task("Test addNewTask", "Test addNewTask description");
-        taskManager.createTask(task);
         taskManager.deleteTaskById(task.getId());
-
         Task deletedTask = taskManager.getTaskById(task.getId());
         Assertions.assertNull(deletedTask, "Задача не была удалена.");
     }
 
     @Test
     void deleteEpicByIdTest() {
-        TaskManager taskManager = new InMemoryTaskManager();
-        Epic epic = new Epic("Test addNewEpic", "Test addNewEPic description");
-        taskManager.createEpic(epic);
-        Subtask subtask = new Subtask("Test addNewEpic", "Test addNewEPic description", epic.getId());
-        taskManager.createSubtask(subtask);
         taskManager.deleteEpicById(epic.getId());
-
         Epic deletedEpic = taskManager.getEpicById(epic.getId());
         Subtask deletedSubtask = taskManager.getSubtaskById(subtask.getId());
         Assertions.assertNull(deletedEpic, "Эпик не был удален.");
@@ -184,14 +174,7 @@ class InMemoryTaskManagerTest {
 
     @Test
     void deleteSubtaskByIdTest() {
-        TaskManager taskManager = new InMemoryTaskManager();
-        Epic epic = new Epic("Epic", "Description");
-        taskManager.createEpic(epic);
-
-        Subtask subtask = new Subtask("Subtask", "Description", epic.getId());
-        taskManager.createSubtask(subtask);
         taskManager.deleteSubtaskById(subtask.getId());
-
         Subtask deletedSubtask = taskManager.getSubtaskById(subtask.getId());
         Assertions.assertNull(deletedSubtask, "Подзадача не была удалена.");
     }
@@ -293,4 +276,5 @@ class InMemoryTaskManagerTest {
         Assertions.assertEquals(task1, history.get(0), "Первая задача в истории не совпадает.");
         Assertions.assertEquals(task2, history.get(1), "Вторая задача в истории не совпадает.");
     }
+
 }
