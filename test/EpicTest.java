@@ -1,7 +1,6 @@
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
-import tasks.Task;
 import tasks.enums.Status;
 
 public class EpicTest {
