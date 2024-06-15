@@ -1,6 +1,6 @@
 package manager;
 
-import customCollection.CustomLinkedList;
+import customсollection.CustomLinkedList;
 import tasks.Task;
 
 import java.util.List;

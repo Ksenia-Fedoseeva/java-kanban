@@ -1,8 +1,6 @@
-package customCollection;
+package customсollection;
 
 import tasks.Task;
-
-import java.util.Objects;
 
 public class Node {
     private Task task;
