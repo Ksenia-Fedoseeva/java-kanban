@@ -1,4 +1,4 @@
-package customсollection;
+package customcollection;
 
 import tasks.Task;
 
