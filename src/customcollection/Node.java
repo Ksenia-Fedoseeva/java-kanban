@@ -11,6 +11,12 @@ public class Node {
         this.task = task;
     }
 
+    public Node(Task task, Node prev, Node next) {
+        this.task = task;
+        this.prev = prev;
+        this.next = next;
+    }
+
     public Task getTask() {
         return task;
     }
