@@ -12,31 +12,16 @@ public class CustomLinkedList {
     private HashMap<Integer, Node> nodeMap = new HashMap<>();
 
     public void linkLast(Task task) {
-        Integer taskId = task.getId();
-        checkDuplicate(taskId);
+        removeDuplicateIfExist(task.getId());
 
         Node newNode = new Node(task, tail, null);
         if (nodeMap.isEmpty()) {
             tail = head = newNode;
         } else {
             tail.setNext(newNode);
-            if (nodeMap.size() == 1) {
-                head = tail;
-            }
             tail = newNode;
         }
         nodeMap.put(task.getId(), newNode);
-    }
-
-    private void checkDuplicate(Integer taskId) {
-        if (nodeMap.containsKey(taskId)) {
-            removeNode(nodeMap.get(taskId));
-            if (nodeMap.size() == 1) {
-                tail = null;
-                head = null;
-                nodeMap.clear();
-            }
-        }
     }
 
     public List<Task> getTasks() {
@@ -49,34 +34,73 @@ public class CustomLinkedList {
         return tasksList;
     }
 
+    public void removeDuplicateIfExist(Integer id) {
+        removeTask(id);
+    }
+
     public void removeTask(Integer id) {
-        Node removedNode = nodeMap.remove(id);
-        removeNode(removedNode);
+        if (!nodeMap.isEmpty()) {
+            Node removedNode = nodeMap.remove(id);
+            removeNode(removedNode);
+        }
     }
 
     private void removeNode(Node node) {
-        if (node != null) {
-            Node prevNode = node.getPrev();
-            Node nextNode = node.getNext();
-            if (prevNode != null) {
-                prevNode.setNext(nextNode);
-            } else {
-                // Если prevNode == null, то мы работаем с головой и голову надо обновить
-                head = nextNode;
-            }
-            if (nextNode != null) {
-                nextNode.setPrev(prevNode);
-            } else {
-                // Если nextNode == null, то мы работаем с хвостом и хвост надо обновить
-                tail = prevNode;
-            }
-        }
-        if (tail != null && tail.getPrev() == null && tail.getNext() == null) {
-            head = tail;
+        if (node == null) {
             return;
         }
-        if (head != null && head.getPrev() == null && head.getNext() == null) {
-            tail = head;
+        if (node.prev == null && node.next == null) { // удаляем единственную ноду в списке
+            head = null;
+            tail = null;
+        } else if (node.prev != null && node.next != null) { // удаляем ноду в середине списка
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
+        } else if (node.next == null) { // удаляем ноду в конце списка
+            tail = node.prev;
+            tail.next = null;
+        } else { // удаляем ноду в начале списка
+            head = node.next;
+            head.prev = null;
+        }
+    }
+
+    private static class Node {
+        private Task task;
+        private Node prev;
+        private Node next;
+
+        public Node(Task task) {
+            this.task = task;
+        }
+
+        public Node(Task task, Node prev, Node next) {
+            this.task = task;
+            this.prev = prev;
+            this.next = next;
+        }
+
+        public Task getTask() {
+            return task;
+        }
+
+        public void setTask(Task task) {
+            this.task = task;
+        }
+
+        public Node getPrev() {
+            return prev;
+        }
+
+        public void setPrev(Node prev) {
+            this.prev = prev;
+        }
+
+        public Node getNext() {
+            return next;
+        }
+
+        public void setNext(Node next) {
+            this.next = next;
         }
     }
 
