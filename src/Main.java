@@ -1,9 +1,10 @@
-import manager.InMemoryTaskManager;
 import manager.Managers;
 import manager.TaskManager;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
+
+import java.util.List;
 
 public class Main {
 
@@ -22,41 +23,37 @@ public class Main {
         taskManager.createSubtask(subtask1);
         Subtask subtask2 = new Subtask("Купить чемодан", "Определиться с размером", epic1.getId());
         taskManager.createSubtask(subtask2);
+        Subtask subtask3 = new Subtask("Купить крем спф", "Определиться с брендом", epic1.getId());
+        taskManager.createSubtask(subtask3);
 
         Epic epic2 = new Epic("Готовка", "Варим суп");
         taskManager.createEpic(epic2);
 
-        Subtask subtask3 = new Subtask("Купить продукты на суп", "Сходить в магнит и овощной", epic2.getId());
-        taskManager.createSubtask(subtask3);
+        // Запросила созданные задачи несколько раз в разном порядке.
+        taskManager.getTaskById(task1.getId());
+        taskManager.getEpicById(epic1.getId());
+        taskManager.getSubtaskById(subtask1.getId());
+        taskManager.getTaskById(task2.getId());
+        taskManager.getSubtaskById(subtask2.getId());
+        taskManager.getEpicById(epic2.getId());
+        taskManager.getSubtaskById(subtask3.getId());
 
-        taskManager.getTaskById(1);
-        taskManager.getEpicById(3);
+        // После каждого запроса вывожу историю и убеждаюсь, что в ней нет повторов.
+        printHistory(taskManager.getHistory());
 
-        printAllTasks(taskManager);
+        // Удаляю задачу, которая есть в истории, и проверяю, что при печати она не будет выводиться.
+        taskManager.deleteTaskById(task1.getId());
+        printHistory(taskManager.getHistory());
+
+        // Удаляю эпик с тремя подзадачами и убеждаюсь, что из истории удалился как сам эпик, так и все его подзадачи.
+        taskManager.deleteEpicById(epic1.getId());
+        printHistory(taskManager.getHistory());
     }
 
-    private static void printAllTasks(TaskManager manager) {
-        System.out.println("Задачи:");
-        for (Task task : manager.getAllTasks()) {
-            System.out.println(task);
-        }
-        System.out.println("Эпики:");
-        for (Task epic : manager.getAllEpics()) {
-            System.out.println(epic);
-
-            for (Task task : manager.getAllSubtasksByEpicId(epic.getId())) {
-                System.out.println("--> " + task);
-            }
-        }
-        System.out.println("Подзадачи:");
-        for (Task subtask : manager.getAllSubtasks()) {
-            System.out.println(subtask);
-        }
-
-        System.out.println("История:");
-        for (Task task : manager.getHistory()) {
+    private static void printHistory(List<Task> history) {
+        System.out.println("History:");
+        for (Task task : history) {
             System.out.println(task);
         }
     }
-
 }

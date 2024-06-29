@@ -30,8 +30,6 @@ class InMemoryTaskManagerTest {
         taskManager.createSubtask(subtask);
     }
 
-
-
     @Test
     void createTaskTest() {
         Task task = new Task("Test addNewTask", "Test addNewTask description");
@@ -259,7 +257,6 @@ class InMemoryTaskManagerTest {
         Assertions.assertEquals(Status.DONE, updatedEpic3.getStatus(), "Статус эпика должен быть DONE.");
     }
 
-
     @Test
     void getHistoryTest() {
         TaskManager taskManager = new InMemoryTaskManager();
@@ -273,8 +270,38 @@ class InMemoryTaskManagerTest {
 
         List<Task> history = taskManager.getHistory();
         Assertions.assertEquals(2, history.size(), "История должна содержать 2 задачи.");
-        Assertions.assertEquals(task1, history.get(0), "Первая задача в истории не совпадает.");
-        Assertions.assertEquals(task2, history.get(1), "Вторая задача в истории не совпадает.");
+        Assertions.assertEquals(task2, history.get(0), "Первая задача в истории не совпадает.");
+        Assertions.assertEquals(task1, history.get(1), "Вторая задача в истории не совпадает.");
+    }
+
+    @Test
+    void removeTaskFromHistoryWhenDeletedFromTaskManagerTest() {
+        TaskManager taskManager = new InMemoryTaskManager();
+        Task task = new Task("Task", "Description");
+        taskManager.createTask(task);
+        taskManager.deleteTaskById(task.getId());
+
+        List<Task> history = taskManager.getHistory();
+        Assertions.assertTrue(history.isEmpty(), "История должна быть пустой после удаления задачи из TaskManager.");
+    }
+
+    // Тестируем следующий пункт из ТЗ
+
+    // С помощью сеттеров экземпляры задач позволяют изменить любое своё поле, но это может повлиять на данные внутри менеджера.
+    // Протестируйте эти кейсы и подумайте над возможными вариантами решения проблемы.
+    @Test
+    void updateTaskIdTest() {
+        Task task = new Task("Test addNewTask", "Test addNewTask description");
+        taskManager.createTask(task);
+
+        Integer oldId = task.getId();
+        task.setId(50);
+        Task actualTask = taskManager.getTaskById(oldId);
+
+        Assertions.assertNotNull(actualTask, "Задача не найдена.");
+        Assertions.assertNotEquals(oldId, task.getId(), "Id задач совпадают.");
+        // Изначально, когда писала этот проект, я предложила сделать счетчик id для задач внутри класса Task, и не писать сеттер
+        // для поля id. На данном этапе я не вижу других путей решения этой проблемы
     }
 
 }

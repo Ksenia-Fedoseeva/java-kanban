@@ -23,15 +23,15 @@ public class InMemoryHistoryManagerTest {
     @Test
     void addMultipleTasksTest() {
         HistoryManager historyManager = new InMemoryHistoryManager();
-        Task task1 = new Task("Task 1", "Description 1");
-        Task task2 = new Task("Task 2", "Description 2");
+        Task task1 = new Task(1, "Task 1", "Description 1", Status.IN_PROGRESS);
+        Task task2 = new Task(2, "Task 2", "Description 2", Status.DONE);
         historyManager.add(task1);
         historyManager.add(task2);
 
         List<Task> history = historyManager.getHistory();
         Assertions.assertEquals(2, history.size(), "История должна содержать две задачи.");
-        Assertions.assertEquals(task1, history.get(0), "Первая задача в истории не совпадает.");
-        Assertions.assertEquals(task2, history.get(1), "Вторая задача в истории не совпадает.");
+        Assertions.assertEquals(task2, history.get(0), "Первая задача в истории не совпадает.");
+        Assertions.assertEquals(task1, history.get(1), "Вторая задача в истории не совпадает.");
     }
 
     @Test
@@ -44,30 +44,72 @@ public class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void historyLimitTest() {
-        HistoryManager historyManager = new InMemoryHistoryManager();
-        for (int i = 1; i <= 11; i++) {
-            Task task = new Task("Task " + i, "Description " + i);
-            historyManager.add(task);
-        }
-
-        List<Task> history = historyManager.getHistory();
-        Assertions.assertEquals(10, history.size(), "История должна содержать только десять последних задач.");
-        Assertions.assertEquals("Task 2", history.get(0).getName(), "Первая задача в истории должна быть Task 2.");
-        Assertions.assertEquals("Task 11", history.get(9).getName(), "Последняя задача в истории должна быть Task 11.");
-    }
-
-    @Test
     void addTasksWithSameIdTest() {
         HistoryManager historyManager = new InMemoryHistoryManager();
-        Task task1 = new Task("Task 1", "Description 1");
+        Task task1 = new Task(1, "Task 1", "Description 1", Status.IN_PROGRESS);
         Task task2 = new Task(task1.getId(), "Task 1", "Description 1", Status.DONE);
         historyManager.add(task1);
         historyManager.add(task2);
 
         List<Task> history = historyManager.getHistory();
-        Assertions.assertEquals(2, history.size(), "История должна содержать две задачи.");
-        Assertions.assertEquals(task1, history.get(0), "Первая задача в истории не совпадает.");
+        Assertions.assertEquals(1, history.size(), "История должна содержать одну задачу.");
+        Assertions.assertEquals(task2, history.get(0), "Задачи не совпадают.");
+    }
+
+    @Test
+    void removeTaskFromHistoryTest() {
+        HistoryManager historyManager = new InMemoryHistoryManager();
+        Task task1 = new Task(1, "Task 1", "Description 1", Status.NEW);
+        Task task2 = new Task(2, "Task 2", "Description 2", Status.NEW);
+        historyManager.add(task1);
+        historyManager.add(task2);
+
+        historyManager.remove(task1.getId());
+        List<Task> history = historyManager.getHistory();
+        Assertions.assertEquals(1, history.size(), "История должна содержать одну задачу после удаления.");
+        Assertions.assertEquals(task2, history.get(0), "Задача в истории не совпадает с оставленной задачей.");
+    }
+
+    @Test
+    void addTaskWithSameIdTest() {
+        HistoryManager historyManager = new InMemoryHistoryManager();
+        Task task1 = new Task(1, "Task 1", "Description 1", Status.NEW);
+        Task task2 = new Task(2, "Task 2", "Description 2", Status.NEW);
+        Task task3 = new Task(3, "Task 3", "Description 3", Status.NEW);
+
+        historyManager.add(task1);
+        historyManager.add(task2);
+        historyManager.add(task3);
+
+        Task task4 = new Task(2, "Task 2 Updated", "Description 2 Updated", Status.IN_PROGRESS);
+        historyManager.add(task4);
+
+        List<Task> history = historyManager.getHistory();
+        Assertions.assertEquals(3, history.size(), "История должна содержать три задачи.");
+        Assertions.assertEquals(task4, history.get(0), "Первая задача в истории не совпадает.");
+        Assertions.assertEquals(task3, history.get(1), "Вторая задача в истории не совпадает.");
+        Assertions.assertEquals(task1, history.get(2), "Третья задача в истории не совпадает.");
+    }
+
+    @Test
+    void sequentialAddAndRemoveTest() {
+        HistoryManager historyManager = new InMemoryHistoryManager();
+        Task task1 = new Task(1, "Task 1", "Description 1", Status.NEW);
+        Task task2 = new Task(2, "Task 2", "Description 2", Status.NEW);
+
+        historyManager.add(task1);
+        historyManager.add(task2);
+
+        historyManager.remove(task1.getId());
+        List<Task> history = historyManager.getHistory();
+        Assertions.assertEquals(1, history.size(), "История должна содержать одну задачу после удаления.");
+        Assertions.assertEquals(task2, history.get(0), "Задача в истории не совпадает с оставленной задачей.");
+
+        Task task3 = new Task(3, "Task 3", "Description 3", Status.NEW);
+        historyManager.add(task3);
+        history = historyManager.getHistory();
+        Assertions.assertEquals(2, history.size(), "История должна содержать две задачи после добавления.");
+        Assertions.assertEquals(task3, history.get(0), "Первая задача в истории не совпадает.");
         Assertions.assertEquals(task2, history.get(1), "Вторая задача в истории не совпадает.");
     }
 
