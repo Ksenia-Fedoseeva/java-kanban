@@ -80,6 +80,7 @@ public class Task {
             return new Subtask(id, name, description, status, Integer.valueOf(taskFields[epicIdIndex]));
         }
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
