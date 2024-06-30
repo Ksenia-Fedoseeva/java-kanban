@@ -213,4 +213,22 @@ public class InMemoryTaskManager implements TaskManager {
         return historyManager.getHistory();
     }
 
+    public void createTaskForLoadFromFile(Task task) {
+        incrementCounterId();
+        tasksMap.put(task.getId(), task);
+    }
+
+    public void createEpicForLoadFromFile(Epic epic) {
+        incrementCounterId();
+        epicsMap.put(epic.getId(), epic);
+    }
+
+    public void createSubtaskForLoadFromFile(Subtask subtask) {
+        incrementCounterId();
+        subtasksMap.put(subtask.getId(), subtask);
+        Epic epic = epicsMap.get(subtask.getEpicId());
+        epic.addSubtasksId(subtask.getId());
+        updateEpicStatusBasedOnSubtasks(subtask.getEpicId());
+    }
+
 }
