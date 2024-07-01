@@ -12,12 +12,12 @@ import java.util.Set;
 
 public class InMemoryTaskManager implements TaskManager {
     private Integer counterId = 0;
-    private HashMap<Integer, Task> tasksMap;
-    private HashMap<Integer, Epic> epicsMap;
-    private HashMap<Integer, Subtask> subtasksMap;
+    protected HashMap<Integer, Task> tasksMap;
+    protected HashMap<Integer, Epic> epicsMap;
+    protected HashMap<Integer, Subtask> subtasksMap;
     private HistoryManager historyManager;
 
-    private void incrementCounterId() {
+    protected void incrementCounterId() {
         counterId++;
     }
 
@@ -183,7 +183,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    private void updateEpicStatusBasedOnSubtasks(Integer epicId) {
+    protected void updateEpicStatusBasedOnSubtasks(Integer epicId) {
         int counterNew = 0;
         int counterDone = 0;
         Epic epic = epicsMap.get(epicId);
@@ -211,24 +211,6 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public List<Task> getHistory() {
         return historyManager.getHistory();
-    }
-
-    public void createTaskForLoadFromFile(Task task) {
-        incrementCounterId();
-        tasksMap.put(task.getId(), task);
-    }
-
-    public void createEpicForLoadFromFile(Epic epic) {
-        incrementCounterId();
-        epicsMap.put(epic.getId(), epic);
-    }
-
-    public void createSubtaskForLoadFromFile(Subtask subtask) {
-        incrementCounterId();
-        subtasksMap.put(subtask.getId(), subtask);
-        Epic epic = epicsMap.get(subtask.getEpicId());
-        epic.addSubtasksId(subtask.getId());
-        updateEpicStatusBasedOnSubtasks(subtask.getEpicId());
     }
 
 }

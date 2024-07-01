@@ -4,6 +4,7 @@ import exceptions.ManagerSaveException;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
+import tasks.enums.TasksTypes;
 
 import java.io.*;
 import java.nio.file.Path;
@@ -117,7 +118,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 if (line.startsWith("id")) {
                     continue;
                 }
-                fileBackedTaskManager.writeTaskForLoadFromFile(Task.fromString(line));
+                int typeIndex = 1;
+                String[] taskFields = line.split(",");
+                TasksTypes type = TasksTypes.valueOf(taskFields[typeIndex]);
+                fileBackedTaskManager.writeTaskForLoadFromFile(Task.fromString(line), type);
             }
 
             br.close();
@@ -127,16 +131,34 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return fileBackedTaskManager;
     }
 
-    private void writeTaskForLoadFromFile(Task task) {
+    private void writeTaskForLoadFromFile(Task task, TasksTypes type) {
         if (task != null) {
-            if (task instanceof Epic) {
-                super.createEpicForLoadFromFile((Epic) task);
-            } else if (task instanceof Subtask) {
-                super.createSubtaskForLoadFromFile((Subtask) task);
+            if (TasksTypes.EPIC.equals(type)) {
+                createEpicForLoadFromFile((Epic) task);
+            } else if (TasksTypes.SUBTASK.equals(type)) {
+                createSubtaskForLoadFromFile((Subtask) task);
             } else {
-                super.createTaskForLoadFromFile(task);
+                createTaskForLoadFromFile(task);
             }
         }
+    }
+
+    private void createTaskForLoadFromFile(Task task) {
+        incrementCounterId();
+        tasksMap.put(task.getId(), task);
+    }
+
+    private void createEpicForLoadFromFile(Epic epic) {
+        incrementCounterId();
+        epicsMap.put(epic.getId(), epic);
+    }
+
+    private void createSubtaskForLoadFromFile(Subtask subtask) {
+        incrementCounterId();
+        subtasksMap.put(subtask.getId(), subtask);
+        Epic epic = epicsMap.get(subtask.getEpicId());
+        epic.addSubtasksId(subtask.getId());
+        updateEpicStatusBasedOnSubtasks(subtask.getEpicId());
     }
 
 }
