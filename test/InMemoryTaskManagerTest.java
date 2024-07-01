@@ -72,7 +72,7 @@ class InMemoryTaskManagerTest {
 
     @Test
     void updateEpicTest() {
-        Epic updateEpic = new Epic(epic.getId(), "Test addNewEpic", "Test addNewEPic description Update",
+        Epic updateEpic = new Epic(epic.getId(), "Test addNewEpic", "Test addNewEpic description Update",
                 Status.IN_PROGRESS);
         taskManager.updateEpic(updateEpic);
 
@@ -84,8 +84,8 @@ class InMemoryTaskManagerTest {
 
     @Test
     void updateSubtaskTest() {
-        Subtask updateSubtask = new Subtask(subtask.getId(), "Test addNewEpic",
-                "Test addNewEPic description Update", Status.IN_PROGRESS, epic.getId());
+        Subtask updateSubtask = new Subtask(subtask.getId(), "Test addNewSubtask",
+                "Test addNewSubtask description Update", Status.IN_PROGRESS, epic.getId());
         taskManager.updateSubtask(updateSubtask);
 
         Subtask actualSubtask = taskManager.getSubtaskById(updateSubtask.getId());

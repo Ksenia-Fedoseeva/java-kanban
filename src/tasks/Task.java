@@ -1,6 +1,7 @@
 package tasks;
 
 import tasks.enums.Status;
+import tasks.enums.TasksTypes;
 
 import java.util.Objects;
 
@@ -10,14 +11,12 @@ public class Task {
     private String description;
     private Status status;
 
-    // Конструктор для создания новой задачи
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
         this.status = Status.NEW;
     }
 
-    // Конструктор для обновления задачи
     public Task(Integer id, String name, String description, Status status) {
         this.id = id;
         this.name = name;
@@ -57,6 +56,31 @@ public class Task {
         this.status = status;
     }
 
+    public static Task fromString(String value) {
+        int idIndex = 0;
+        int typeIndex = 1;
+        int nameIndex = 2;
+        int statusIndex = 3;
+        int descriptionIndex = 4;
+        int epicIdIndex = 5;
+
+        String[] taskFields = value.split(",");
+        TasksTypes type = TasksTypes.valueOf(taskFields[typeIndex]);
+
+        Integer id = Integer.valueOf(taskFields[idIndex]);
+        String name = taskFields[nameIndex];
+        String description = taskFields[descriptionIndex];
+        Status status = Status.valueOf(taskFields[statusIndex]);
+
+        if (TasksTypes.TASK.equals(type)) {
+            return new Task(id, name, description, status);
+        } else if (TasksTypes.EPIC.equals(type)) {
+            return new Epic(id, name, description, status);
+        } else {
+            return new Subtask(id, name, description, status, Integer.valueOf(taskFields[epicIdIndex]));
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -72,12 +96,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", status=" + status +
-                '}';
+        return id + "," + TasksTypes.TASK + "," + name + "," + status + "," + description + ",";
     }
 
 }
