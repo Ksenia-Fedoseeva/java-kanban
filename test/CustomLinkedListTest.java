@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import tasks.Task;
 import tasks.enums.Status;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,11 +22,16 @@ public class CustomLinkedListTest {
     @BeforeEach
     void init() {
         customLinkedList = new CustomLinkedList();
-        task1 = new Task(1, "Task 1", "Description 1", Status.NEW);
-        task2 = new Task(2, "Task 2", "Description 2", Status.IN_PROGRESS);
-        task3 = new Task(3, "Task 3", "Description 3", Status.DONE);
-        task4 = new Task(4, "Task 4", "Description 4", Status.NEW);
-        task5 = new Task(5, "Task 5", "Description 5", Status.IN_PROGRESS);
+        task1 = new Task(1, "Task 1", "Description 1", Status.NEW, Duration.ofMinutes(30),
+                LocalDateTime.of(2024, 8, 25, 10, 0));
+        task2 = new Task(2, "Task 2", "Description 2", Status.IN_PROGRESS, Duration.ofMinutes(45),
+                LocalDateTime.of(2024, 8, 25, 11, 0));
+        task3 = new Task(3, "Task 3", "Description 3", Status.DONE, Duration.ofMinutes(60),
+                LocalDateTime.of(2024, 8, 25, 12, 0));
+        task4 = new Task(4, "Task 4", "Description 4", Status.NEW, Duration.ofMinutes(90),
+                LocalDateTime.of(2024, 8, 25, 13, 0));
+        task5 = new Task(5, "Task 5", "Description 5", Status.IN_PROGRESS, Duration.ofMinutes(120),
+                LocalDateTime.of(2024, 8, 25, 14, 0));
         testListTask = new ArrayList<>();
         testListTask.add(task5);
         testListTask.add(task4);
@@ -125,7 +132,8 @@ public class CustomLinkedListTest {
 
     @Test
     void addDuplicateTaskTest() {
-        Task duplicateTask = new Task(task1.getId(), "Task 1", "Description 1 updated", Status.DONE);
+        Task duplicateTask = new Task(task1.getId(), "Task 1", "Description 1 updated", Status.DONE,
+                task1.getDuration(), task1.getStartTime());
         customLinkedList.linkLast(task1);
         customLinkedList.linkLast(duplicateTask);
 
@@ -137,7 +145,8 @@ public class CustomLinkedListTest {
 
     @Test
     void addDuplicateTaskTest2() {
-        Task duplicateTask = new Task(task1.getId(), "Task 1", "Description 1 updated", Status.DONE);
+        Task duplicateTask = new Task(task1.getId(), "Task 1", "Description 1 updated", Status.DONE,
+                task1.getDuration(), task1.getStartTime());
         customLinkedList.linkLast(task1);
         customLinkedList.linkLast(task2);
         customLinkedList.linkLast(duplicateTask);

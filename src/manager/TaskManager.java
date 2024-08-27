@@ -48,4 +48,8 @@ public interface TaskManager {
 
     List<Task> getHistory();
 
+    List<Task> getPrioritizedTasks();
+
+    boolean hasTimeConflict(Task newTask);
+
 }
