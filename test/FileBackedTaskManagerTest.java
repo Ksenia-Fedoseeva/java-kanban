@@ -47,7 +47,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
         List<String> linesFromFileExpected = new ArrayList<>();
         linesFromFileExpected.add("id,type,name,status,description,epic,duration,startTime");
         linesFromFileExpected.add("1,TASK,Test addNewTask,NEW,Test addNewTask description,,60,2024-08-25T10:00");
-        linesFromFileExpected.add("2,EPIC,Test addNewEpic,NEW,Test addNewEpic description,,90,2024-08-25T12:00");  // duration и startTime эпика рассчитываются
+        linesFromFileExpected.add("2,EPIC,Test addNewEpic,NEW,Test addNewEpic description,,90,2024-08-25T12:00");
         linesFromFileExpected.add("3,SUBTASK,Test addNewSubtask,NEW,Test addNewSubtask description,2,90,2024-08-25T12:00");
 
         assertEqualsFileContent(linesFromFileExpected, tempFile);
@@ -81,7 +81,6 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
 
     @Test
     void loadFromFileWithNonExistentFileTest() {
-        // Проверяем, что будет выброшено исключение, если файл не существует
         Assertions.assertThrows(ManagerSaveException.class, () -> {
             FileBackedTaskManager.loadFromFile(Paths.get("non_existent_file.csv"));
         }, "Должно выбрасываться исключение, если файл не существует.");

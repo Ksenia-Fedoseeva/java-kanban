@@ -293,8 +293,10 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void createSubtaskWithoutEpicTest() {
-        Subtask subtask = new Subtask("Test Subtask", "Description", 999, Duration.ofMinutes(30), LocalDateTime.now().plusDays(1));
-        Assertions.assertThrows(NullPointerException.class, () -> taskManager.createSubtask(subtask), "Должно выбрасываться исключение при создании подзадачи без эпика");
+        Subtask subtask = new Subtask("Test Subtask", "Description", 999, Duration.ofMinutes(30),
+                LocalDateTime.now().plusDays(1));
+        Assertions.assertThrows(NullPointerException.class, () -> taskManager.createSubtask(subtask),
+                "Должно выбрасываться исключение при создании подзадачи без эпика");
     }
 
 }

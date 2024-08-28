@@ -15,7 +15,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
     }
 
     @Test
-    void updateEpicStatusBasedOnSubtasksTest() { // оставь
+    void updateEpicStatusBasedOnSubtasksTest() {
         Epic epic = new Epic("Epic", "Description");
         taskManager.createEpic(epic);
 
@@ -44,7 +44,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
     }
 
     @Test
-    void updateEpicEvaluationTest() { // оставь
+    void updateEpicEvaluationTest() {
         Epic epic = new Epic("Epic", "Description");
         taskManager.createEpic(epic);
 
