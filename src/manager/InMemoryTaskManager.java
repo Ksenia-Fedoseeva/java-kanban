@@ -272,8 +272,7 @@ public class InMemoryTaskManager implements TaskManager {
         return new ArrayList<>(prioritizedTasks);
     }
 
-    @Override
-    public boolean hasTimeConflict(Task newTask) {
+    private boolean hasTimeConflict(Task newTask) {
         LocalDateTime newTaskStart = newTask.getStartTime();
         LocalDateTime newTaskEnd = newTask.getEndTime();
 

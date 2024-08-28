@@ -50,6 +50,4 @@ public interface TaskManager {
 
     List<Task> getPrioritizedTasks();
 
-    boolean hasTimeConflict(Task newTask);
-
 }

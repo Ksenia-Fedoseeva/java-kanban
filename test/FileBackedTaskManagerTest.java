@@ -17,7 +17,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-class FileBackedTaskManagerTest {
+class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
+
+    public FileBackedTaskManagerTest() throws IOException {
+        super(new FileBackedTaskManager(
+                Paths.get(
+                        File.createTempFile("taskStorageMain", ".csv").getPath())
+                )
+        );
+    }
+
     @Test
     void loadFromFileSomeTasksTest() throws IOException {
         File tempFile = File.createTempFile("taskStorage", ".csv");
