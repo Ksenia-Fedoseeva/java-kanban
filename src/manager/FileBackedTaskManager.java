@@ -6,7 +6,10 @@ import tasks.Subtask;
 import tasks.Task;
 import tasks.enums.TasksTypes;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Path;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
@@ -91,7 +94,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     private void save() {
         try {
             FileWriter writer = new FileWriter(taskStorage.toFile(), false);
-            writer.write("id,type,name,status,description,epic");
+            writer.write("id,type,name,status,description,epic,duration,startTime");
             for (Task task : getAllTasks()) {
                 writer.write("\n" + task.toString());
             }
@@ -158,7 +161,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         subtasksMap.put(subtask.getId(), subtask);
         Epic epic = epicsMap.get(subtask.getEpicId());
         epic.addSubtasksId(subtask.getId());
-        updateEpicStatusBasedOnSubtasks(subtask.getEpicId());
     }
 
 }

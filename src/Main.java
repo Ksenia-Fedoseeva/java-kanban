@@ -4,6 +4,8 @@ import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class Main {
@@ -11,19 +13,24 @@ public class Main {
     public static void main(String[] args) {
         TaskManager taskManager = Managers.getDefault();
 
-        Task task1 = new Task("Переезд", "Купить коробки");
+        Task task1 = new Task("Переезд", "Купить коробки малые", Duration.ofMinutes(60),
+                LocalDateTime.of(2024, 8, 25, 10, 0));
         taskManager.createTask(task1);
-        Task task2 = new Task("Отдых", "Организовать прогулку на велосипедах");
+        Task task2 = new Task("Отдых", "Организовать прогулку на велосипедах", Duration.ofMinutes(120),
+                LocalDateTime.of(2024, 8, 26, 14, 0));
         taskManager.createTask(task2);
 
         Epic epic1 = new Epic("Отпуск", "Летим в Турцию");
         taskManager.createEpic(epic1);
 
-        Subtask subtask1 = new Subtask("Купить билеты", "На авиасейлз", epic1.getId());
+        Subtask subtask1 = new Subtask("Купить билеты", "На авиасейлз", epic1.getId(),
+                Duration.ofMinutes(90), LocalDateTime.of(2024, 8, 27, 9, 0));
         taskManager.createSubtask(subtask1);
-        Subtask subtask2 = new Subtask("Купить чемодан", "Определиться с размером", epic1.getId());
+        Subtask subtask2 = new Subtask("Купить чемодан", "Определиться с размером", epic1.getId(),
+                Duration.ofMinutes(45), LocalDateTime.of(2024, 8, 27, 12, 0));
         taskManager.createSubtask(subtask2);
-        Subtask subtask3 = new Subtask("Купить крем спф", "Определиться с брендом", epic1.getId());
+        Subtask subtask3 = new Subtask("Купить крем спф", "Определиться с брендом", epic1.getId(),
+                Duration.ofMinutes(30), LocalDateTime.of(2024, 8, 27, 16, 0));
         taskManager.createSubtask(subtask3);
 
         Epic epic2 = new Epic("Готовка", "Варим суп");
