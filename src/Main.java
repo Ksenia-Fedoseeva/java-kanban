@@ -55,6 +55,9 @@ public class Main {
         // Удаляю эпик с тремя подзадачами и убеждаюсь, что из истории удалился как сам эпик, так и все его подзадачи.
         taskManager.deleteEpicById(epic1.getId());
         printHistory(taskManager.getHistory());
+
+        taskManager.deleteAllTasks();
+        printHistory(taskManager.getHistory());
     }
 
     private static void printHistory(List<Task> history) {
