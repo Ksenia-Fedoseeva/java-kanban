@@ -80,6 +80,7 @@ public class SubtasksHttpHandler extends BaseHttpHandler {
             sendNotAcceptable(exchange, e);
         }
     }
+
     private void handleDeleteMethod(HttpExchange exchange, String[] pathParts) throws IOException {
         if (pathParts.length == 3) {
             Integer subtaskId = Integer.valueOf(pathParts[2]);
@@ -90,7 +91,7 @@ public class SubtasksHttpHandler extends BaseHttpHandler {
             } else {
                 sendNotFound(exchange);
             }
-        }else if (pathParts.length == 2) {
+        } else if (pathParts.length == 2) {
             taskManager.deleteAllSubtasks();
             sendNoContent(exchange);
         } else {
