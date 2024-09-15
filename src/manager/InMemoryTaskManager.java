@@ -67,6 +67,8 @@ public class InMemoryTaskManager implements TaskManager {
         }
         if (tasksMap.containsKey(task.getId())) {
             tasksMap.put(task.getId(), task);
+        } else {
+            throw new IllegalArgumentException("Задача с ID " + task.getId() + " не найдена.");
         }
     }
 
@@ -74,6 +76,8 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateEpic(Epic epic) {
         if (epicsMap.containsKey(epic.getId())) {
             epicsMap.put(epic.getId(), epic);
+        } else {
+            throw new IllegalArgumentException("Эпик с ID " + epic.getId() + " не найден.");
         }
     }
 
@@ -87,6 +91,8 @@ public class InMemoryTaskManager implements TaskManager {
             subtasksMap.put(subtask.getId(), subtask);
             updateEpicStatusBasedOnSubtasks(subtask.getEpicId());
             updateEpicEvaluation(subtask.getEpicId());
+        } else {
+            throw new IllegalArgumentException("Подзадача с ID " + subtask.getId() + " не найдена.");
         }
     }
 
