@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import exceptions.BadRequestException;
 import manager.TaskManager;
 
 import java.io.IOException;
@@ -25,6 +26,26 @@ public abstract class BaseHttpHandler implements HttpHandler {
                 .create();
     }
 
+    protected <T> T convertJsonToObject(HttpExchange exchange, Class<T> classOfT) throws IOException {
+        String jsonString = readText(exchange);
+        if (!validateJsonRequest(jsonString)) {
+            throw new BadRequestException("Пришло пустое тело запроса");
+        }
+        return jsonToObject(jsonString, classOfT);
+    }
+
+    protected String readText(HttpExchange exchange) throws IOException {
+        return new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
+    }
+
+    protected boolean validateJsonRequest(String jsonString) {
+        return jsonString != null && !jsonString.isBlank() && !jsonString.equals("{}");
+    }
+
+    protected <T> T jsonToObject(String jsonString, Class<T> classOfT) {
+        return gson.fromJson(jsonString, classOfT);
+    }
+
     protected void sendOk(HttpExchange exchange, Object responseObject) throws IOException {
         try (exchange) {
             String responseString = gson.toJson(responseObject);
@@ -38,6 +59,19 @@ public abstract class BaseHttpHandler implements HttpHandler {
     protected void sendNoContent(HttpExchange exchange) throws IOException {
         try (exchange) {
             exchange.sendResponseHeaders(201, 0);
+        }
+    }
+
+    protected void sendBadRequest(HttpExchange exchange, BadRequestException exception) throws IOException {
+        try (exchange) {
+            System.out.println("Ошибка во время выполнения запроса - " + exception.getMessage());
+            exception.printStackTrace();
+
+            String responseString = "{\"errorMessage\" : \"" + exception.getMessage() + "\"}";
+            byte[] resp = responseString.getBytes(StandardCharsets.UTF_8);
+            exchange.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
+            exchange.sendResponseHeaders(400, resp.length);
+            exchange.getResponseBody().write(resp);
         }
     }
 

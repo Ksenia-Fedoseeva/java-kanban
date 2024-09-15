@@ -1,12 +1,12 @@
 package httpserver.handlers;
 
 import com.sun.net.httpserver.HttpExchange;
+import exceptions.BadRequestException;
 import manager.TaskManager;
 import tasks.Epic;
 import tasks.Subtask;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class EpicsHttpHandler extends BaseHttpHandler {
@@ -70,7 +70,7 @@ public class EpicsHttpHandler extends BaseHttpHandler {
     private void handlePostMethod(HttpExchange exchange, String[] pathParts) throws IOException {
         try {
             if (pathParts.length == 2) {
-                Epic epic = gson.fromJson(new InputStreamReader(exchange.getRequestBody(), "UTF-8"), Epic.class);
+                Epic epic = convertJsonToObject(exchange, Epic.class);
                 if (epic.getId() != null) {
                     try {
                         taskManager.updateEpic(epic);
@@ -87,6 +87,8 @@ public class EpicsHttpHandler extends BaseHttpHandler {
             }
         } catch (IllegalArgumentException e) {
             sendNotAcceptable(exchange, e);
+        } catch (BadRequestException e) {
+            sendBadRequest(exchange, e);
         }
     }
 

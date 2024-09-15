@@ -1,11 +1,11 @@
 package httpserver.handlers;
 
 import com.sun.net.httpserver.HttpExchange;
+import exceptions.BadRequestException;
 import manager.TaskManager;
 import tasks.Task;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class TasksHttpHandler extends BaseHttpHandler {
@@ -60,7 +60,7 @@ public class TasksHttpHandler extends BaseHttpHandler {
     private void handlePostMethod(HttpExchange exchange, String[] pathParts) throws IOException {
         try {
             if (pathParts.length == 2) {
-                Task task = gson.fromJson(new InputStreamReader(exchange.getRequestBody(), "UTF-8"), Task.class);
+                Task task = convertJsonToObject(exchange, Task.class);
                 if (task.getId() != null) {
                     try {
                         taskManager.updateTask(task);
@@ -77,6 +77,8 @@ public class TasksHttpHandler extends BaseHttpHandler {
             }
         } catch (IllegalArgumentException e) {
             sendNotAcceptable(exchange, e);
+        } catch (BadRequestException e) {
+            sendBadRequest(exchange, e);
         }
     }
 

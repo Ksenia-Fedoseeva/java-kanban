@@ -221,4 +221,18 @@ public class TasksHttpHandlerTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(405, response.statusCode(), "Ожидался 405 Method Not Allowed");
     }
+
+    @Test
+    public void testAddTaskInvalidData() throws IOException, InterruptedException {
+        String invalidTaskJson = "{}";
+
+        URI url = URI.create("http://localhost:8080/tasks");
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(url)
+                .POST(HttpRequest.BodyPublishers.ofString(invalidTaskJson))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        assertEquals(400, response.statusCode(), "Ожидался 400 Bad Request");
+    }
 }
